@@ -641,7 +641,7 @@ const Product = () => {
                 <StyledTableCell>Product Category</StyledTableCell>
                 <StyledTableCell>Rate</StyledTableCell>
                 <StyledTableCell>UOM</StyledTableCell>
-                <StyledTableCell>Active Status</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Actions</StyledTableCell>
               </TableRow>
             </TableHead>

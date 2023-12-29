@@ -5,12 +5,12 @@ const Transaction = [
   {
     title: "Purchase Invoice",
     icon: StorefrontIcon,
-    href: "/transacation/PurchaseInvoice",
+    href: "/transacation/ManagePurchaseInvoice",
   },
   {
     title: "Sales Invoice",
     icon: LocalMallIcon,
-    href: "/transacation/SalesInvoice",
+    href: "/transacation/ManageSalesInvoice",
   },
 ];
 

@@ -801,7 +801,7 @@ const Customer = () => {
                 <StyledTableCell>Country</StyledTableCell>
                 <StyledTableCell>PhoneNo</StyledTableCell>
                 <StyledTableCell>Email</StyledTableCell>
-                <StyledTableCell>Bank</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Actions</StyledTableCell>
               </TableRow>
             </TableHead>

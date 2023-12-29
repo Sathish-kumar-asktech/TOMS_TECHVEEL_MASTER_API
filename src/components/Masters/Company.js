@@ -867,7 +867,7 @@ const Company = () => {
                 <StyledTableCell>PhoneNo</StyledTableCell>
                 <StyledTableCell>Email</StyledTableCell>
                 <StyledTableCell>Bank</StyledTableCell>
-                <StyledTableCell>Active Status</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Actions</StyledTableCell>
               </TableRow>
             </TableHead>

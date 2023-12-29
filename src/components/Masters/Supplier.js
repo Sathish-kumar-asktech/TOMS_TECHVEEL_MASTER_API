@@ -247,6 +247,7 @@ const Supplier = () => {
     setPhoneNo(data.PhoneNo);
     setEmailId(data.EmailId);
     setActiveStatus(data.ActiveStatus);
+    
     const selectedCity = allCityData.find((cdata) => cdata.City === data.City);
     console.log(selectedCity, "selectedCity");
     setCity(selectedCity);

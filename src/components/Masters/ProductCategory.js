@@ -473,7 +473,7 @@ const ProductCategory = () => {
               <TableRow>
                 <StyledTableCell>S.No</StyledTableCell>
                 <StyledTableCell>ProductCategory</StyledTableCell>
-                <StyledTableCell>Active Status</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Actions</StyledTableCell>
               </TableRow>
             </TableHead>

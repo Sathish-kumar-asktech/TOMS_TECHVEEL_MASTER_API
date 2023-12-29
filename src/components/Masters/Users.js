@@ -521,7 +521,7 @@ const Users = () => {
                 <StyledTableCell>User Code</StyledTableCell>
                 <StyledTableCell>User Name</StyledTableCell>
                 <StyledTableCell>Password</StyledTableCell>
-                <StyledTableCell>Active Status</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Actions</StyledTableCell>
               </TableRow>
             </TableHead>

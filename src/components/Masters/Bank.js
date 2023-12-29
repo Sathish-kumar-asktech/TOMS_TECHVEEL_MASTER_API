@@ -544,7 +544,7 @@ const Bank = () => {
                 <StyledTableCell>Acc Number</StyledTableCell>
                 <StyledTableCell>IFSC Code</StyledTableCell>                
                 <StyledTableCell>Branch</StyledTableCell>                
-                <StyledTableCell>Active Status</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Actions</StyledTableCell>
               </TableRow>
             </TableHead>
