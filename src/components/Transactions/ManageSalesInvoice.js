@@ -139,7 +139,7 @@ const ManageSalesInvoice = () => {
   };
 
   const EditSalesInvoice = (editID) => {
-    navigate(`/transacation/SalesInvoice/${editID}`);
+    // navigate(`/transacation/SalesInvoice/${editID}`);
   };
 
   // handle delete popup dialog
