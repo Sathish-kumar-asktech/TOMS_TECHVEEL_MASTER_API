@@ -8,7 +8,7 @@ import shadows from "./Shadows";
 // // // Global Variables
 // ##############################
 
-const SidebarWidth = 265;
+const SidebarWidth = 300;
 const TopbarHeight = 70;
 
 const baseTheme = createTheme({

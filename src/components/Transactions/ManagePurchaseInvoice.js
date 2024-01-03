@@ -30,7 +30,8 @@ import styled from "@emotion/styled";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { Link, useNavigate } from "react-router-dom";
-import ContactSupportIcon from "@mui/icons-material/ContactSupport";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import numeral from "numeral";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "../../axios";
@@ -41,7 +42,7 @@ const StyledTableCell = styled(TableCell)({
   color: "white",
   fontWeight: "800",
   textAlign: "center",
-  backgroundColor: "#596FB7",
+  backgroundColor: "#3081D0",
   padding: "none",
   whiteSpace: "nowrap",
 });
@@ -206,21 +207,6 @@ const ManagePurchaseInvoice = () => {
 
       <Container maxWidth={"xl"} sx={{ pt: 2 }} elevation={3} component={Paper}>
         {/* table header */}
-        <Typography
-          variant="h5"
-          p={1}
-          boxShadow={1}
-          borderColor="#11235A"
-          textAlign={"center"}
-          border={0.5}
-          borderRadius={1}
-          my={2}
-          color="#11235A"
-        >
-          Manage Purchase Invoice
-        </Typography>
-
-        {/* search & add button */}
         <Stack
           direction={{ xs: "column", md: "row" }}
           justifyContent={"space-between"}
@@ -228,7 +214,45 @@ const ManagePurchaseInvoice = () => {
           spacing={2}
           my={3}
         >
-          
+          <Typography
+            variant="h4"
+            p={1}
+            boxShadow={1}
+            borderColor="#11235A"
+            textAlign={"center"}
+            borderRadius={1}
+            py={2}
+            pr={5}
+            color="white"
+            sx={{
+              borderTopRightRadius: 50,
+              borderBottomRightRadius: 50,
+              fontFamily: "math",
+              background: "#2c3e50",
+              background: "-webkit-linear-gradient(to right, #3498db, #2c3e50)",
+              background: "linear-gradient(to right, #3498db, #2c3e50)",
+              boxShadow:
+                "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
+            }}
+          >
+            <Stack
+              direction={"row"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              spacing={5}
+            >
+              <StorefrontIcon sx={{ pr: 1 }} />
+              Manage Purchase Invoice
+            </Stack>
+          </Typography>
+
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            justifyContent={"flex-end"}
+            alignItems={"center"}
+            spacing={2}
+            my={3}
+          >
             <TextField
               type="text"
               variant="outlined"
@@ -254,7 +278,9 @@ const ManagePurchaseInvoice = () => {
             >
               New Invoice
             </Button>
+          </Stack>
         </Stack>
+        {/* search & add button */}
 
         {/* table  */}
         <TableContainer>
@@ -300,16 +326,24 @@ const ManagePurchaseInvoice = () => {
                   <TableCell align="center">
                     {formatDate(data.PIDate)}
                   </TableCell>
-                  <TableCell align="center">₹ {data.netAmount}</TableCell>
+                  <TableCell align="center">
+                    ₹ {numeral(data.netAmount).format("0,0")}
+                  </TableCell>
 
                   <TableCell
                     align="center"
                     padding="normal"
                     sx={{ padding: "0" }}
-                  >                    
-                      <IconButton aria-label="Edit" onClick={() => EditPurchaseInvoice(data.PurchaseInvoiceID)} >
-                        <EditIcon color="primary" />
-                      </IconButton>
+                  >
+                    <IconButton
+                      aria-label="Edit"
+                      onClick={() =>
+                        EditPurchaseInvoice(data.PurchaseInvoiceID)
+                      }
+                    >
+                      <EditIcon color="primary" />
+                    </IconButton>
+
                     <IconButton
                       aria-label="Delete"
                       onClick={() => handleDelete(data.PurchaseInvoiceID)}

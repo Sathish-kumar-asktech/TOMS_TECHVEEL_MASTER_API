@@ -5,9 +5,6 @@ import { Navigate } from "react-router-dom";
 const FullLayout = lazy(() => import("../layouts/FullLayout/FullLayout.js"));
 /****End Layouts*****/
 
-// /*****Pages******/
-// const Dashboard1 = lazy(() => import("../views/dashboards/Dashboard1.js"));
-
 // form Transactions
 const Bank = lazy(() => import("../components/Masters/Bank.js"));
 const Company = lazy(() => import("../components/Masters/Company.js"));
@@ -35,6 +32,19 @@ const SalesInvoice = lazy(() =>
   import("../components/Transactions/SalesInvoice")
 );
 
+const MISPurchaseInvoice = lazy(() =>
+  import("../components//Reports/MISPurchaseInvoice.js")
+);
+
+const MISSalesInvoice = lazy(() =>
+  import("../components//Reports/MISSalesInvoice.js")
+);
+
+
+const MISStockReport = lazy(() =>
+  import("../components//Reports/MISStockReport.js")
+);
+
 /*****Routes******/
 const ThemeRoutes = [
   {
@@ -53,11 +63,32 @@ const ThemeRoutes = [
       { path: "/masters/UOM", element: <UOM /> },
       { path: "/masters/Users", element: <Users /> },
       { path: "/transacation/PurchaseInvoice", element: <PurchaseInvoice /> },
-      { path: "/transacation/PurchaseInvoice/:id", element: <PurchaseInvoice /> },
-      { path: "/transacation/ManagePurchaseInvoice", element: <ManagePurchaseInvoice /> },
+      {
+        path: "/transacation/PurchaseInvoice/:id",
+        element: <PurchaseInvoice />,
+      },
+      {
+        path: "/transacation/ManagePurchaseInvoice",
+        element: <ManagePurchaseInvoice />,
+      },
       { path: "/transacation/SalesInvoice", element: <SalesInvoice /> },
       { path: "/transacation/SalesInvoice/:id", element: <SalesInvoice /> },
-      { path: "/transacation/ManageSalesInvoice", element: <ManageSalesInvoice /> },      
+      {
+        path: "/transacation/ManageSalesInvoice",
+        element: <ManageSalesInvoice />,
+      },
+      {
+        path: "/mis_reports/MISPurchaseInvoice",
+        element: <MISPurchaseInvoice />,
+      },
+      {
+        path: "/mis_reports/MISSalesInvoice",
+        element: <MISSalesInvoice />,
+      },      
+      {
+        path: "/mis_reports/MISStockReport",
+        element: <MISStockReport />,
+      },
     ],
   },
 ];

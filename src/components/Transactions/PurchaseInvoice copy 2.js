@@ -115,7 +115,14 @@ const PurchaseInvoice = () => {
     (total, product) => total + parseInt(product.netAmount),
     0
   );
-  
+
+  const [rowErrors, setRowErrors] = useState([]);
+
+  const handleRowErrorChange = (index, field, error, helperText) => {
+    const newErrors = [...rowErrors];
+    newErrors[index] = { field, error, helperText };
+    setRowErrors(newErrors);
+  };
 
   const calculateMaxDate = () => {
     const currentDate = new Date();
@@ -802,6 +809,44 @@ const PurchaseInvoice = () => {
     }
   };
 
+  const handleBlur2 = (index) => {
+    const row = SelectedProductsData[page * rowsPerPage + index];
+    const discountValue = parseFloat(row.Discount);
+    const rateValue = parseFloat(row.Rate);
+    const quantityValue = parseFloat(row.Quantity);
+
+    let newErrors = { ...errors };
+    let newHelperTexts = { ...helperTexts };
+    let isValid = true;
+
+    // Validate discount against rate * quantity
+    if (discountValue > rateValue * quantityValue) {
+      isValid = false;
+      newErrors = {
+        ...newErrors,
+        Discount: true,
+      };
+      newHelperTexts = {
+        ...newHelperTexts,
+        Discount: "Discount cannot exceed Rate * Quantity",
+      };
+    } else {
+      newErrors = {
+        ...newErrors,
+        Discount: false,
+      };
+      newHelperTexts = {
+        ...newHelperTexts,
+        Discount: "",
+      };
+    }
+
+    setErrors(newErrors);
+    setHelperTexts(newHelperTexts);
+
+    return isValid;
+  };
+
   const handleRateChange = (event, index) => {
     const currentIndex = page * rowsPerPage + index;
     const newRate = parseInt(event.target.value, 10) || 0;
@@ -839,20 +884,73 @@ const PurchaseInvoice = () => {
   const handleDiscountChange = (event, index) => {
     const currentIndex = page * rowsPerPage + index;
     const newDiscount = parseInt(event.target.value, 10) || 0;
+    const isValid = handleBlur2(currentIndex);
 
-    setSelectedProductsData((prevData) =>
-      prevData.map((product, i) =>
-        i === currentIndex
-          ? {
-              ...product,
-              Discount: newDiscount,
-              netAmount: product.Quantity * product.Rate - newDiscount || 0,
-            }
-          : product
-      )
-    );
+    if (isValid) {
+      setSelectedProductsData((prevData) =>
+        prevData.map((product, i) =>
+          i === currentIndex
+            ? {
+                ...product,
+                Discount: newDiscount,
+                netAmount: product.Quantity * product.Rate - newDiscount || 0,
+              }
+            : product
+        )
+      );
+    }
   };
 
+  // const handleRateChange = (event, index) => {
+  //   const currentIndex = page * rowsPerPage + index;
+  //   const newRate = parseInt(event.target.value, 10) || 0;
+
+  //   setSelectedProductsData((prevData) =>
+  //     prevData.map((product, i) =>
+  //       i === currentIndex
+  //         ? {
+  //             ...product,
+  //             Rate: newRate,
+  //             netAmount: newRate * product.Rate - product.Discount || 0,
+  //           }
+  //         : product
+  //     )
+  //   );
+  // };
+
+  // const handleQuantityChange = (event, index) => {
+  //   const currentIndex = page * rowsPerPage + index;
+  //   const newQuantity = parseInt(event.target.value, 10) || 0;
+
+  //   setSelectedProductsData((prevData) =>
+  //     prevData.map((product, i) =>
+  //       i === currentIndex
+  //         ? {
+  //             ...product,
+  //             Quantity: newQuantity,
+  //             netAmount: newQuantity * product.Rate - product.Discount || 0,
+  //           }
+  //         : product
+  //     )
+  //   );
+  // };
+
+  // const handleDiscountChange = (event, index) => {
+  //   const currentIndex = page * rowsPerPage + index;
+  //   const newDiscount = parseInt(event.target.value, 10) || 0;
+
+  //   setSelectedProductsData((prevData) =>
+  //     prevData.map((product, i) =>
+  //       i === currentIndex
+  //         ? {
+  //             ...product,
+  //             Discount: newDiscount,
+  //             netAmount: product.Quantity * product.Rate - newDiscount || 0,
+  //           }
+  //         : product
+  //     )
+  //   );
+  // };
 
   const handleAddOpen = () => {
     setOpen(true);
@@ -1078,8 +1176,8 @@ const PurchaseInvoice = () => {
           </>
           {selectedSupplier && (
             <Button
-            variant="contained"
-            color="primary"
+              variant="outlined"
+              color="secondary"
               sx={{ boxShadow: 1, whiteSpace: "nowrap", p: 1, px: 2 }}
               onClick={handleAddOpen}
               size="small"
@@ -1132,7 +1230,7 @@ const PurchaseInvoice = () => {
                       </TableCell>
 
                       <TableCell align="center">{data.UOM}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="center">
                         <TextField
                           type="number"
                           variant="standard"
@@ -1142,12 +1240,20 @@ const PurchaseInvoice = () => {
                             SelectedProductsData[page * rowsPerPage + index]
                               .Quantity
                           }
-                          onBlur={handleBlur}
+                          onBlur={handleBlur2}
                           onChange={(e) => handleQuantityChange(e, index)}
                           fullWidth
                           size="small"
-                          error={errors.Quantity}
-                          helperText={helperTexts.Quantity}
+                          error={
+                            rowErrors[index]?.field === "Quantity" &&
+                            rowErrors[index]?.error
+                          }
+                          helperText={
+                            rowErrors[index]?.field === "Quantity" &&
+                            rowErrors[index]?.helperText
+                          }
+                          // error={errors.Quantity}
+                          // helperText={helperTexts.Quantity}
                           className={
                             isFormSubmitted && errors.Quantity
                               ? "shake-helper-text"
@@ -1156,7 +1262,7 @@ const PurchaseInvoice = () => {
                           sx={{ textAlign: "center" }}
                         />
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="center">
                         <TextField
                           type="number"
                           variant="standard"
@@ -1166,12 +1272,20 @@ const PurchaseInvoice = () => {
                             SelectedProductsData[page * rowsPerPage + index]
                               .Rate
                           }
-                          onBlur={handleBlur}
+                          onBlur={handleBlur2}
                           onChange={(e) => handleRateChange(e, index)}
                           fullWidth
                           size="small"
-                          error={errors.Rate}
-                          helperText={helperTexts.Rate}
+                          error={
+                            rowErrors[index]?.field === "Rate" &&
+                            rowErrors[index]?.error
+                          }
+                          helperText={
+                            rowErrors[index]?.field === "Rate" &&
+                            rowErrors[index]?.helperText
+                          }
+                          // error={errors.Rate}
+                          // helperText={helperTexts.Rate}
                           className={
                             isFormSubmitted && errors.Rate
                               ? "shake-helper-text"
@@ -1187,8 +1301,7 @@ const PurchaseInvoice = () => {
                           }}
                         />
                       </TableCell>
-
-                      <TableCell align="left">
+                      <TableCell align="center">
                         <TextField
                           sx={{ textAlign: "center" }}
                           type="number"
@@ -1199,12 +1312,20 @@ const PurchaseInvoice = () => {
                             SelectedProductsData[page * rowsPerPage + index]
                               .Discount
                           }
-                          onBlur={handleBlur}
+                          onBlur={handleBlur2}
                           onChange={(e) => handleDiscountChange(e, index)}
                           fullWidth
                           size="small"
-                          error={errors.Discount}
-                          helperText={helperTexts.Discount}
+                          error={
+                            rowErrors[index]?.field === "Discount" &&
+                            rowErrors[index]?.error
+                          }
+                          helperText={
+                            rowErrors[index]?.field === "Discount" &&
+                            rowErrors[index]?.helperText
+                          }
+                          // error={errors.Discount}
+                          // helperText={helperTexts.Discount}
                           className={
                             isFormSubmitted && errors.Discount
                               ? "shake-helper-text"
@@ -1220,7 +1341,7 @@ const PurchaseInvoice = () => {
                         />
                       </TableCell>
 
-                      <TableCell align="center">  ₹ {numeral(data.netAmount).format("0,0")}</TableCell>
+                      <TableCell align="center">{data.netAmount}</TableCell>
                       <TableCell align="center">
                         <IconButton
                           aria-label="Remove"

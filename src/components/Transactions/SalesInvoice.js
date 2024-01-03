@@ -35,16 +35,16 @@ import { useNavigate } from "react-router-dom";
 import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import axios from "../../axios";
+import numeral from "numeral";
 import "./animation.css";
 import { useParams } from "react-router-dom";
-import { DiscFull } from "@mui/icons-material";
 
 // table header cell styles
 const StyledTableCell = styled(TableCell)({
   color: "#F5F7F8",
   fontWeight: "600",
   textAlign: "center",
-  backgroundColor: "#4942E4",
+  backgroundColor: "#3081D0",
 });
 
 const formatDateToinitialValues = (date) => {
@@ -90,9 +90,9 @@ const SalesInvoice = () => {
   const [PoRefNumber, setPoRefNumber] = useState();
   const [PoRefDate, setPoRefDate] = useState(initialDate);
   const [Rate, setRate] = useState(null);
-  const [DiscountValue, setDiscountValue] = useState(0);
-  const [selectedSupplier, setselectedSupplier] = useState(null);
-  const [allSupplierData, setallSupplierDate] = useState([]);
+  const [DiscountValue, setDiscountValue] = useState(null);
+  const [selectedCustomer, setselectedCustomer] = useState(null);
+  const [allCustomerData, setallCustomerData] = useState([]);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [IdToDelete, setIdToDelete] = useState(null);
   const [editID, setEditID] = useState(id);
@@ -103,7 +103,8 @@ const SalesInvoice = () => {
     0
   );
   const totalRate = SelectedProductsData.reduce(
-    (total, product) => total + parseInt(product.Rate),
+    (total, product) =>
+      total + parseInt(product.Rate) * parseInt(product.Quantity),
     0
   );
   const totalDiscount = SelectedProductsData.reduce(
@@ -127,7 +128,7 @@ const SalesInvoice = () => {
     InvoiceDate: false,
     PoRefNumber: false,
     PoRefDate: false,
-    selectedSupplier: false,
+    selectedCustomer: false,
     TotalAmount: false,
     Discount: false,
     Rate: false,
@@ -142,7 +143,7 @@ const SalesInvoice = () => {
     InvoiceDate: "",
     PoRefNumber: "",
     PoRefDate: "",
-    selectedSupplier: "",
+    selectedCustomer: "",
     TotalAmount: "",
     Rate: "",
     DiscountValue: "",
@@ -155,7 +156,7 @@ const SalesInvoice = () => {
     setProductDescription("");
     setQuantity(1);
     setRate(null);
-    setDiscountValue(0);
+    setDiscountValue(null);
 
     errors.ProductDescription = false;
     errors.Quantity = false;
@@ -169,7 +170,7 @@ const SalesInvoice = () => {
   };
 
   const resetFieldSummary = () => {
-    setselectedSupplier(null);
+    setselectedCustomer(null);
     setInvoiceNumber(null);
     setInvoiceDate(initialDate);
     setPoRefNumber(null);
@@ -177,12 +178,12 @@ const SalesInvoice = () => {
     setRemarks("");
     setSelectedProductsData([]);
 
-    errors.selectedSupplier = false;
+    errors.selectedCustomer = false;
     errors.InvoiceNumber = false;
     errors.InvoiceDate = false;
-    errors.PoRefNumber= false;
+    errors.PoRefNumber = false;
     errors.PoRefDate = false;
-    errors.selectedSupplier = false;
+    errors.selectedCustomer = false;
     errors.TotalAmount = false;
     errors.Discount = false;
     errors.Rate = false;
@@ -190,12 +191,12 @@ const SalesInvoice = () => {
     errors.netAmount = false;
     errors.Remarks = false;
 
-    helperTexts.selectedSupplier = "";
+    helperTexts.selectedCustomer = "";
     helperTexts.InvoiceNumber = "";
     helperTexts.InvoiceDate = "";
-    helperTexts.PoRefNumber= "";
+    helperTexts.PoRefNumber = "";
     helperTexts.PoRefDate = "";
-    helperTexts.selectedSupplier = "";
+    helperTexts.selectedCustomer = "";
     helperTexts.TotalAmount = "";
     helperTexts.Discount = "";
     helperTexts.netAmount = "";
@@ -216,7 +217,7 @@ const SalesInvoice = () => {
   // API Integration
   useEffect(() => {
     getAllProducts();
-    GetAllSupplier();
+    GetAllCustomer();
     if (id) {
       getOneSalesInvoice();
       GetOneSalesDetails();
@@ -242,16 +243,16 @@ const SalesInvoice = () => {
   };
 
   // get all UOM Data  Request
-  const GetAllSupplier = async () => {
+  const GetAllCustomer = async () => {
     setOpenLoader(true);
     try {
-      const res = await axios.instance.get("/GetAllSupplier", {
+      const res = await axios.instance.get("/GetAllCustomer", {
         headers: { Authorization: tokent, "Content-Type": "application/json" },
       });
       const filteredDataObj = res.data.filter(
         (item) => item.ActiveStatus === "y"
       );
-      setallSupplierDate(filteredDataObj);
+      setallCustomerData(filteredDataObj);
       setOpenLoader(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -267,9 +268,9 @@ const SalesInvoice = () => {
       });
       const InvoiceData = res.data[0];
 
-      setselectedSupplier({
-        Supplierid: InvoiceData.Supplierid,
-        SupplierName: InvoiceData.SupplierName,
+      setselectedCustomer({
+        Customerid: InvoiceData.Customerid,
+        CustomerName: InvoiceData.CustomerName,
       });
 
       setInvoiceNumber(InvoiceData.InvoiceNumber);
@@ -300,16 +301,12 @@ const SalesInvoice = () => {
   const InsertData = async (newRecord) => {
     setOpenLoader(true);
     try {
-      const res = await axios.instance.post(
-        "/InsertSalesInvoice",
-        newRecord,
-        {
-          headers: {
-            Authorization: tokent,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await axios.instance.post("/InsertSalesInvoice", newRecord, {
+        headers: {
+          Authorization: tokent,
+          "Content-Type": "application/json",
+        },
+      });
 
       // Extract SalesInvoiceID from the response
       const SalesInvoiceID = res.data[0].SalesInvoiceID;
@@ -329,16 +326,12 @@ const SalesInvoice = () => {
 
         console.log("ProductDetail", ProductDetail);
 
-        return await axios.instance.post(
-          "/InsertSalesDetails",
-          ProductDetail,
-          {
-            headers: {
-              Authorization: tokent,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        return await axios.instance.post("/InsertSalesDetails", ProductDetail, {
+          headers: {
+            Authorization: tokent,
+            "Content-Type": "application/json",
+          },
+        });
       });
 
       // Wait for all promises to resolve
@@ -500,10 +493,10 @@ const SalesInvoice = () => {
 
     const inputValidation =
       errors.InvoiceDate ||
-      errors.PoRefNumber||
+      errors.PoRefNumber ||
       errors.PoRefDate ||
       !InvoiceDate ||
-      !PoRefNumber||
+      !PoRefNumber ||
       !PoRefDate;
 
     if (inputValidation) {
@@ -539,7 +532,7 @@ const SalesInvoice = () => {
 
     setErrors((prevErrors) => ({
       ...prevErrors,
-      selectedSupplier: false,
+      selectedCustomer: false,
       InvoiceNumber: false,
       InvoiceDate: false,
       PoRefNumber: false,
@@ -552,7 +545,7 @@ const SalesInvoice = () => {
 
     setHelperTexts((prevHelperTexts) => ({
       ...prevHelperTexts,
-      selectedSupplier: "",
+      selectedCustomer: "",
       InvoiceNumber: "",
       InvoiceDate: "",
       PoRefNumber: "",
@@ -567,7 +560,7 @@ const SalesInvoice = () => {
       InvoiceDate: InvoiceDate,
       PoRefNumber: PoRefNumber,
       PoRefDate: PoRefDate,
-      Supplierid: selectedSupplier.Supplierid,
+      Customerid: selectedCustomer.Customerid,
       TotalAmount: totalRate,
       Discount: totalDiscount,
       netAmount: totalNetAmount,
@@ -593,9 +586,8 @@ const SalesInvoice = () => {
       errors.Rate ||
       errors.DiscountValue ||
       !ProductDescription ||
-      !Quantity;
-    !Rate;
-    !DiscountValue;
+      !Quantity ||
+      !Rate;
 
     if (inputValidation) {
       if (!ProductDescription) {
@@ -622,18 +614,18 @@ const SalesInvoice = () => {
           Rate: "Please Enter Rate",
         }));
       }
-      if (!DiscountValue) {
+      if (DiscountValue < 0) {
         setErrors((prevErrors) => ({ ...prevErrors, DiscountValue: true }));
         setHelperTexts((prevHelperTexts) => ({
           ...prevHelperTexts,
-          DiscountValue: "Please Enter Discount",
+          DiscountValue: "Please Enter Valid Discount",
         }));
       }
-      if (!selectedSupplier) {
-        setErrors((prevErrors) => ({ ...prevErrors, selectedSupplier: true }));
+      if (!selectedCustomer) {
+        setErrors((prevErrors) => ({ ...prevErrors, selectedCustomer: true }));
         setHelperTexts((prevHelperTexts) => ({
           ...prevHelperTexts,
-          selectedSupplier: "Please Select Supplier",
+          selectedCustomer: "Please Select Customer",
         }));
       }
     }
@@ -641,6 +633,14 @@ const SalesInvoice = () => {
     if (inputValidation) {
       return;
     }
+    // if (DiscountValue > Rate) {
+    //   setErrors((prevErrors) => ({ ...prevErrors, DiscountValue: true }));
+    //   setHelperTexts((prevHelperTexts) => ({
+    //     ...prevHelperTexts,
+    //     DiscountValue: "Can't exceed the actual rate",
+    //   }));
+    //   return;
+    // }
 
     setErrors((prevErrors) => ({
       ...prevErrors,
@@ -675,7 +675,7 @@ const SalesInvoice = () => {
     setProductDescription(null);
     setQuantity(1);
     setRate(null);
-    setDiscountValue(0);
+    setDiscountValue(null);
     handleCloseProduct();
   };
 
@@ -710,19 +710,19 @@ const SalesInvoice = () => {
     }
   };
 
-  const handleInputChangeSupplier = (event, newValue) => {
-    setselectedSupplier(newValue);
+  const handleInputChangeCustomer = (event, newValue) => {
+    setselectedCustomer(newValue);
     if (!newValue) {
-      setErrors((prevErrors) => ({ ...prevErrors, selectedSupplier: true }));
+      setErrors((prevErrors) => ({ ...prevErrors, selectedCustomer: true }));
       setHelperTexts((prevHelperTexts) => ({
         ...prevHelperTexts,
-        selectedSupplier: "Please select Supplier",
+        selectedCustomer: "Please select Customer",
       }));
     } else {
-      setErrors((prevErrors) => ({ ...prevErrors, selectedSupplier: false }));
+      setErrors((prevErrors) => ({ ...prevErrors, selectedCustomer: false }));
       setHelperTexts((prevHelperTexts) => ({
         ...prevHelperTexts,
-        selectedSupplier: "",
+        selectedCustomer: "",
       }));
     }
   };
@@ -745,6 +745,10 @@ const SalesInvoice = () => {
         error = true;
         helperText = "Please Enter Product Quantity";
         setIsFormSubmitted(false);
+      } else if (value.trim() < 1) {
+        error = true;
+        helperText = "Please Enter Valid Quantity";
+        setIsFormSubmitted(false);
       } else {
         setIsFormSubmitted(true);
       }
@@ -753,19 +757,48 @@ const SalesInvoice = () => {
         error = true;
         helperText = "Please Enter Product Rate";
         setIsFormSubmitted(false);
+      } else if (value.trim() <= 0) {
+        error = true;
+        helperText = "Please Enter Valid Rate";
+        setIsFormSubmitted(false);
       } else {
         setIsFormSubmitted(true);
       }
     } else if (name === "DiscountValue") {
+      console.log(value.trim(), Rate, "condition");
       if (!value.trim()) {
         error = true;
-        helperText = "Please Enter DiscountV";
+        helperText = "Please Enter Discount";
+        setIsFormSubmitted(false);
+      } else if (value.trim() < 0) {
+        error = true;
+        helperText = "Please Enter Valid Discount";
+        setIsFormSubmitted(false);
+      } else if (value.trim() > Rate) {
+        error = true;
+        helperText = "Can't exceed the actual rate ";
+        setIsFormSubmitted(false);
+      } else {
+        setIsFormSubmitted(true);
+      }
+    } else if (name === "Discountx") {
+      console.log(value.trim(), Rate, "condition");
+      if (!value.trim()) {
+        error = true;
+        helperText = "Please Enter Discount";
+        setIsFormSubmitted(false);
+      } else if (value.trim() < 0) {
+        error = true;
+        helperText = "Please Enter Valid Discount";
+        setIsFormSubmitted(false);
+      } else if (value.trim() > Rate) {
+        error = true;
+        helperText = "Can't exceed the actual rate ";
         setIsFormSubmitted(false);
       } else {
         setIsFormSubmitted(true);
       }
     }
-
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: error,
@@ -793,7 +826,7 @@ const SalesInvoice = () => {
           ? {
               ...product,
               Rate: newRate,
-              netAmount: newRate * product.Rate - product.Discount || 0,
+              netAmount: newRate * product.Quantity - product.Discount,
             }
           : product
       )
@@ -935,7 +968,7 @@ const SalesInvoice = () => {
                 />
               </FormControl>
             )}
-            <FormControl size="small" fullWidth>
+            <FormControl size="small" fullWidth required>
               <FormLabel component="legend">Invoice Date </FormLabel>
               <TextField
                 size="small"
@@ -967,14 +1000,14 @@ const SalesInvoice = () => {
             alignItems={"center"}
             spacing={2}
           >
-            <FormControl size="small" fullWidth>
+            <FormControl size="small" fullWidth required>
               <FormLabel component="legend">Po Ref Number</FormLabel>
               <TextField
                 type="number"
                 variant="outlined"
                 color="primary"
                 name="PoRefNumber"
-                value={PoRefNumber=== null ? "" : PoRefNumber}
+                value={PoRefNumber === null ? "" : PoRefNumber}
                 onChange={handleInputChangeSummary}
                 fullWidth
                 size="small"
@@ -982,12 +1015,14 @@ const SalesInvoice = () => {
                 error={errors.PoRefNumber}
                 helperText={helperTexts.PoRefNumber}
                 className={
-                  isFormSubmitted && errors.PoRefNumber? "shake-helper-text" : ""
+                  isFormSubmitted && errors.PoRefNumber
+                    ? "shake-helper-text"
+                    : ""
                 }
               />
             </FormControl>
 
-            <FormControl size="small" fullWidth>
+            <FormControl size="small" fullWidth required>
               <FormLabel component="legend">Po Ref Date </FormLabel>
               <TextField
                 size="small"
@@ -1020,42 +1055,42 @@ const SalesInvoice = () => {
           my={2}
         >
           <>
-            <FormControl size="small" fullWidth>
+            <FormControl size="small" fullWidth required>
               <Autocomplete
                 size="small"
                 fullWidth
-                name="selectedSupplier"
-                options={allSupplierData}
-                getOptionLabel={(data) => (data ? data.SupplierName : "")}
+                name="selectedCustomer"
+                options={allCustomerData}
+                getOptionLabel={(data) => (data ? data.CustomerName : "")}
                 isOptionEqualToValue={(option, value) =>
-                  option.Supplierid === value.Supplierid
+                  option.Customerid === value.Customerid
                 }
-                value={selectedSupplier || null}
-                onChange={handleInputChangeSupplier}
+                value={selectedCustomer || null}
+                onChange={handleInputChangeCustomer}
                 renderInput={(params) => (
-                  <TextField {...params} label="Select Supplier" />
+                  <TextField {...params} label="Select Customer" />
                 )}
               />
-              {errors.selectedSupplier && (
+              {errors.selectedCustomer && (
                 <Typography
                   variant="caption"
                   sx={{ ml: 2 }}
                   color="error"
                   className={
-                    isFormSubmitted && errors.selectedSupplier
+                    isFormSubmitted && errors.selectedCustomer
                       ? "shake-helper-text"
                       : ""
                   }
                 >
-                  {errors.selectedSupplier && helperTexts.selectedSupplier}
+                  {errors.selectedCustomer && helperTexts.selectedCustomer}
                 </Typography>
               )}
             </FormControl>
           </>
-          {selectedSupplier && (
+          {selectedCustomer && (
             <Button
-              variant="outlined"
-              color="secondary"
+              variant="contained"
+              color="primary"
               sx={{ boxShadow: 1, whiteSpace: "nowrap", p: 1, px: 2 }}
               onClick={handleAddOpen}
               size="small"
@@ -1065,7 +1100,7 @@ const SalesInvoice = () => {
             </Button>
           )}
         </Stack>
-        {selectedSupplier && (
+        {selectedCustomer && (
           <>
             {/* table  */}
             <TableContainer>
@@ -1076,8 +1111,8 @@ const SalesInvoice = () => {
                     <StyledTableCell>Product</StyledTableCell>
                     <StyledTableCell>Category</StyledTableCell>
                     <StyledTableCell>UOM</StyledTableCell>
-                    <StyledTableCell>Rate</StyledTableCell>
                     <StyledTableCell>Quantity</StyledTableCell>
+                    <StyledTableCell>Rate</StyledTableCell>
                     <StyledTableCell>Discount</StyledTableCell>
                     <StyledTableCell>Net Amount</StyledTableCell>
                     <StyledTableCell>Actions</StyledTableCell>
@@ -1112,6 +1147,30 @@ const SalesInvoice = () => {
                           type="number"
                           variant="standard"
                           color="primary"
+                          name="Quantity"
+                          value={
+                            SelectedProductsData[page * rowsPerPage + index]
+                              .Quantity
+                          }
+                          onBlur={handleBlur}
+                          onChange={(e) => handleQuantityChange(e, index)}
+                          fullWidth
+                          size="small"
+                          error={errors.Quantity}
+                          helperText={helperTexts.Quantity}
+                          className={
+                            isFormSubmitted && errors.Quantity
+                              ? "shake-helper-text"
+                              : ""
+                          }
+                          sx={{ textAlign: "center" }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <TextField
+                          type="number"
+                          variant="standard"
+                          color="primary"
                           name="Rate"
                           value={
                             SelectedProductsData[page * rowsPerPage + index]
@@ -1138,31 +1197,6 @@ const SalesInvoice = () => {
                           }}
                         />
                       </TableCell>
-                      <TableCell align="center">
-                        <TextField
-                          type="number"
-                          variant="standard"
-                          color="primary"
-                          name="Quantity"
-                          value={
-                            SelectedProductsData[page * rowsPerPage + index]
-                              .Quantity
-                          }
-                          onBlur={handleBlur}
-                          onChange={(e) => handleQuantityChange(e, index)}
-                          fullWidth
-                          size="small"
-                          error={errors.Quantity}
-                          helperText={helperTexts.Quantity}
-                          className={
-                            isFormSubmitted && errors.Quantity
-                              ? "shake-helper-text"
-                              : ""
-                          }
-                          sx={{ textAlign: "center" }}
-                        />
-                      </TableCell>
-
                       <TableCell align="center">
                         <TextField
                           sx={{ textAlign: "center" }}
@@ -1194,7 +1228,9 @@ const SalesInvoice = () => {
                           }}
                         />
                       </TableCell>
-                      <TableCell align="center">{data.netAmount}</TableCell>
+                      <TableCell align="center">
+                        ₹ {numeral(data.netAmount).format("0,0")}
+                      </TableCell>
                       <TableCell align="center">
                         <IconButton
                           aria-label="Remove"
@@ -1209,14 +1245,9 @@ const SalesInvoice = () => {
                     </TableRow>
                   ))}
                   <TableRow>
-                    <TableCell colSpan={5} align="right" padding="1">
+                    <TableCell colSpan={4} align="right" padding="1">
                       Total:
                     </TableCell>
-                    {/* <TableCell align="center">
-                      <Typography variant="h6" color="initial">
-                        ₹{totalRate}
-                      </Typography>
-                    </TableCell> */}
                     <TableCell align="left">
                       <Typography variant="h6" color="initial">
                         {totalQuantity}
@@ -1224,12 +1255,17 @@ const SalesInvoice = () => {
                     </TableCell>
                     <TableCell align="left">
                       <Typography variant="h6" color="initial">
-                        ₹{totalDiscount}
+                        ₹ {numeral(totalRate).format("0,0")}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="left">
+                      <Typography variant="h6" color="initial">
+                        ₹ {numeral(totalDiscount).format("0,0")}
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
                       <Typography variant="h6" color="initial">
-                        ₹{totalNetAmount}
+                        ₹ {numeral(totalNetAmount).format("0,0")}
                       </Typography>
                     </TableCell>
                     <TableCell align="center"></TableCell>
@@ -1365,6 +1401,7 @@ const SalesInvoice = () => {
                   type="number"
                   variant="outlined"
                   color="primary"
+                  required
                   label="Quantity"
                   name="Quantity"
                   value={Quantity === null ? "" : Quantity}
@@ -1386,6 +1423,7 @@ const SalesInvoice = () => {
                   color="primary"
                   label="Rate"
                   name="Rate"
+                  required
                   value={Rate === null ? "" : Rate}
                   onBlur={handleBlur}
                   onChange={handleInputChange}

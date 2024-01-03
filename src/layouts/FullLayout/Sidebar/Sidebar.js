@@ -11,11 +11,18 @@ import {
   ListItemText,
   Typography,
   Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import { SidebarWidth } from "../../../assets/global/Theme-variable";
 import LogoIcon from "../Logo/LogoIcon";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Transaction from "./Transaction";
+import AddRoadIcon from '@mui/icons-material/AddRoad';
 import Masters from "./Masters";
+import MISReports from "./MISReports";
+import "./Sidebar.css";
 
 const Sidebar = (props) => {
   const [open, setOpen] = React.useState(true);
@@ -65,98 +72,197 @@ const Sidebar = (props) => {
           <List
             sx={{
               mt: 2,
+              pb: 0,
+              mb:0
             }}
           >
             <Divider color="#C3E2C2" />
-            <Typography variant="h4" color="initial" p={2}>
-              Masters
-            </Typography>
-            {Masters.map((item, index) => {
-              //{/********SubHeader**********/}
-              return (
-                <>
-                  <List component="li" disablePadding key={index}>
-                    <ListItem
-                      onClick={() => handleClick(index)}
-                      button
-                      component={NavLink}
-                      to={item.href}
-                      selected={pathDirect === item.href}
-                      sx={{
-                        ...(pathDirect === item.href && {
-                          color: "white",
-                          backgroundColor: (theme) =>
-                            `${theme.palette.primary.main}!important`,
-                        }),
-                      }}
-                    >
-                      <ListItemIcon
-                        sx={{
-                          ...(pathDirect === item.href && { color: "white" }),
-                        }}
-                      >
-                        <item.icon
-                          width="10"
-                          height="10"
-                          color="secondary"
+            <Accordion sx={{ boxShadow: 0 }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography variant="h4" color="initial">
+                  Masters
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {Masters.map((item, index) => {
+                  //{/********SubHeader**********/}
+                  return (
+                    <>
+                      <List component="li" disablePadding key={index}>
+                        <ListItem
+                          onClick={() => handleClick(index)}
+                          button
+                          component={NavLink}
+                          to={item.href}
+                          selected={pathDirect === item.href}
                           sx={{
-                            ...(pathDirect === item.href && { color: "white" }),
+                            ...(pathDirect === item.href && {
+                              color: "white",
+                              backgroundColor: (theme) =>
+                                `${theme.palette.primary.main}!important`,
+                            }),
                           }}
-                        />
-                      </ListItemIcon>
-                      <ListItemText>{item.title}</ListItemText>
-                    </ListItem>
-                  </List>
-                </>
-              );
-            })}
+                        >
+                          <ListItemIcon
+                            sx={{
+                              ...(pathDirect === item.href && {
+                                color: "white",
+                              }),
+                            }}
+                          >
+                            <item.icon
+                              width="10"
+                              height="10"
+                              color="secondary"
+                              sx={{
+                                ...(pathDirect === item.href && {
+                                  color: "white",
+                                }),
+                              }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText>{item.title}</ListItemText>
+                        </ListItem>
+                      </List>
+                    </>
+                  );
+                })}
+              </AccordionDetails>
+            </Accordion>
           </List>
         </Box>
         <Box>
-          <List>
+          <List
+            sx={{
+              pb: 0,
+            }}
+          >
             <Divider color="#C3E2C2" />
-            <Typography variant="h4" color="initial" p={2}>
-              Transactions
-            </Typography>
-            {Transaction.map((item, index) => {
-              //{/********SubHeader**********/}
-              return (
-                <>
-                  <List component="li" disablePadding key={index}>
-                    <ListItem
-                      onClick={() => handleClick(index)}
-                      button
-                      component={NavLink}
-                      to={item.href}
-                      selected={pathDirect === item.href}
-                      sx={{
-                        ...(pathDirect === item.href && {
-                          color: "white",
-                          backgroundColor: (theme) =>
-                            `${theme.palette.primary.main}!important`,
-                        }),
-                      }}
-                    >
-                      <ListItemIcon
-                        sx={{
-                          ...(pathDirect === item.href && { color: "white" }),
-                        }}
-                      >
-                        <item.icon
-                          width="10"
-                          height="10"
-                          color="secondary"
+            <Accordion sx={{ boxShadow: 0 }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography variant="h5" color="initial">
+                  Transactions
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {Transaction.map((item, index) => {
+                  //{/********SubHeader**********/}
+                  return (
+                    <>
+                      <List component="li" disablePadding key={index}>
+                        <ListItem
+                          onClick={() => handleClick(index)}
+                          button
+                          component={NavLink}
+                          to={item.href}
+                          selected={pathDirect === item.href}
                           sx={{
-                            ...(pathDirect === item.href && { color: "white" }),
+                            ...(pathDirect === item.href && {
+                              color: "white",
+                              backgroundColor: (theme) =>
+                                `${theme.palette.primary.main}!important`,
+                            }),
                           }}
-                        />
-                      </ListItemIcon>
-                      <ListItemText>{item.title}</ListItemText>
-                    </ListItem>
-                  </List>
-                </>
-              );
-            })}
+                        >
+                          <ListItemIcon
+                            sx={{
+                              ...(pathDirect === item.href && {
+                                color: "white",
+                              }),
+                            }}
+                          >
+                            <item.icon
+                              width="10"
+                              height="10"
+                              color="secondary"
+                              sx={{
+                                ...(pathDirect === item.href && {
+                                  color: "white",
+                                }),
+                              }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText>{item.title}</ListItemText>
+                        </ListItem>
+                      </List>
+                    </>
+                  );
+                })}
+              </AccordionDetails>
+            </Accordion>
+          </List>
+        </Box>
+        <Box>
+          <List
+            sx={{
+              pb: 0,
+            }}
+          >
+            <Divider color="#C3E2C2" />
+            <Accordion sx={{ boxShadow: 0 }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography variant="h4" color="initial">
+                  Reports
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {MISReports.map((item, index) => {
+                  //{/********SubHeader**********/}
+                  return (
+                    <>
+                      <List component="li" disablePadding key={index}>
+                        <ListItem
+                          onClick={() => handleClick(index)}
+                          button
+                          component={NavLink}
+                          to={item.href}
+                          selected={pathDirect === item.href}
+                          sx={{
+                            ...(pathDirect === item.href && {
+                              color: "white",
+                              backgroundColor: (theme) =>
+                                `${theme.palette.primary.main}!important`,
+                            }),
+                          }}
+                        >
+                          <ListItemIcon
+                            sx={{
+                              ...(pathDirect === item.href && {
+                                color: "white",
+                              }),
+                            }}
+                          >
+                            <item.icon
+                              width="10"
+                              height="10"
+                              color="secondary"
+                              sx={{
+                                ...(pathDirect === item.href && {
+                                  color: "white",
+                                }),
+                              }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText>{item.title}</ListItemText>
+                        </ListItem>
+                      </List>
+                    </>
+                  );
+                })}
+              </AccordionDetails>
+            </Accordion>
           </List>
         </Box>
       </Box>

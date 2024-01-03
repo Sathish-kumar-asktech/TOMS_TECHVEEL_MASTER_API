@@ -29,8 +29,9 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import styled from "@emotion/styled";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import numeral from "numeral";
 import { Link, useNavigate } from "react-router-dom";
-import ContactSupportIcon from "@mui/icons-material/ContactSupport";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "../../axios";
@@ -41,7 +42,7 @@ const StyledTableCell = styled(TableCell)({
   color: "white",
   fontWeight: "800",
   textAlign: "center",
-  backgroundColor: "#4942E4",
+  backgroundColor: "#3081D0",
   padding: "none",
   whiteSpace: "nowrap",
 });
@@ -139,7 +140,7 @@ const ManageSalesInvoice = () => {
   };
 
   const EditSalesInvoice = (editID) => {
-    // navigate(`/transacation/SalesInvoice/${editID}`);
+    navigate(`/transacation/SalesInvoice/${editID}`);
   };
 
   // handle delete popup dialog
@@ -206,21 +207,6 @@ const ManageSalesInvoice = () => {
 
       <Container maxWidth={"xl"} sx={{ pt: 2 }} elevation={3} component={Paper}>
         {/* table header */}
-        <Typography
-          variant="h5"
-          p={1}
-          boxShadow={1}
-          borderColor="#11009E"
-          textAlign={"center"}
-          border={0.5}
-          borderRadius={1}
-          my={2}
-          color="#11009E"
-        >
-          Manage Sales Invoice
-        </Typography>
-
-        {/* search & add button */}
         <Stack
           direction={{ xs: "column", md: "row" }}
           justifyContent={"space-between"}
@@ -228,31 +214,71 @@ const ManageSalesInvoice = () => {
           spacing={2}
           my={3}
         >
-          <TextField
-            type="text"
-            variant="outlined"
-            color="secondary"
-            label="Search Invoice"
-            size="small"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            value={searchTerm}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
+          <Typography
+            variant="h4"
+            p={1}
+            boxShadow={1}
+            borderColor="#11235A"
+            textAlign={"center"}
+            borderRadius={1}
+            py={2}
+            pr={5}
+            color="white"
+            sx={{
+              borderTopRightRadius: 50,
+              borderBottomRightRadius: 50,
+              fontFamily: "math",
+              boxShadow:
+                "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
+              background: "#2c3e50",
+              background: "-webkit-linear-gradient(to right, #3498db, #2c3e50)",
+              background: "linear-gradient(to right, #3498db, #2c3e50)",
             }}
-          />
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ boxShadow: 1, whiteSpace: "nowrap" }}
-            onClick={handleNewInvoice}
-            startIcon={<ReceiptIcon />}
           >
-            New Sales Invoice
-          </Button>
+            <Stack
+              direction={"row"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              spacing={5}
+            >
+              <LocalMallIcon sx={{ pr: 1 }} />
+              Manage Sales Invoice
+            </Stack>
+          </Typography>
+
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            justifyContent={"flex-end"}
+            alignItems={"center"}
+            spacing={2}
+            my={3}
+          >
+            <TextField
+              type="text"
+              variant="outlined"
+              color="secondary"
+              label="Search Invoice"
+              size="small"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchTerm}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ boxShadow: 1, whiteSpace: "nowrap" }}
+              onClick={handleNewInvoice}
+              startIcon={<ReceiptIcon />}
+            >
+              New Sales Invoice
+            </Button>
+          </Stack>
         </Stack>
 
         {/* table  */}
@@ -263,7 +289,7 @@ const ManageSalesInvoice = () => {
                 <StyledTableCell>S.No</StyledTableCell>
                 <StyledTableCell>Invoice Number</StyledTableCell>
                 <StyledTableCell>Invoice Date</StyledTableCell>
-                <StyledTableCell>Supplier</StyledTableCell>
+                <StyledTableCell>Customer</StyledTableCell>
                 <StyledTableCell>Po Ref Number</StyledTableCell>
                 <StyledTableCell>Po Ref Date</StyledTableCell>
                 <StyledTableCell>Invoice Amount</StyledTableCell>
@@ -293,13 +319,13 @@ const ManageSalesInvoice = () => {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    {data.SupplierName}
+                    {data.CustomerName}
                   </TableCell>
                   <TableCell align="center">{data.PoRefNumber}</TableCell>
                   <TableCell align="center">
                     {formatDate(data.PoRefDate)}
                   </TableCell>
-                  <TableCell align="center">₹ {data.netAmount}</TableCell>
+                  <TableCell align="center">₹ {numeral(data.netAmount).format("0,0")}</TableCell>
 
                   <TableCell
                     align="center"
@@ -308,9 +334,7 @@ const ManageSalesInvoice = () => {
                   >
                     <IconButton
                       aria-label="Edit"
-                      onClick={() =>
-                        EditSalesInvoice(data.SalesInvoiceID)
-                      }
+                      onClick={() => EditSalesInvoice(data.SalesInvoiceID)}
                     >
                       <EditIcon color="primary" />
                     </IconButton>
