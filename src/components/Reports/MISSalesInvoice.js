@@ -488,13 +488,18 @@ const MISSalesInvoice = () => {
 
           <Grid container justifyContent={"center"} alignItems={"center"}>
             {TotalBills > 0 && (
-              <Grid item xs={6}>
+              <Grid item md={6} sm={12}>
                 <Stack
                   flexDirection={"row"}
                   justifyContent={"start"}
                   alignItems={"center"}
+                  mb={2}
                 >
-                  <Stack justifyContent={"flex-start"} direction={"row"} mr={5}>
+                  <Stack
+                    justifyContent={"flex-start"}
+                    direction={{ md: "row", sm: "column" }}
+                    mr={5}
+                  >
                     <Typography variant="h5" color="GrayText" pr={1}>
                       Total Bills :
                     </Typography>
@@ -503,7 +508,10 @@ const MISSalesInvoice = () => {
                     </Typography>
                   </Stack>
                   <Divider orientation="vertical" flexItem sx={{ mr: 4 }} />
-                  <Stack justifyContent={"flex-start"} direction={"row"}>
+                  <Stack
+                    justifyContent={"flex-start"}
+                    direction={{ md: "row", sm: "column" }}
+                  >
                     <Typography variant="h5" color="GrayText" pr={1}>
                       Overall Bill Amount :
                     </Typography>
@@ -518,7 +526,7 @@ const MISSalesInvoice = () => {
                 </Stack>
               </Grid>
             )}
-            <Grid item xs={TotalBills > 0 ? 6 : 12}>
+            <Grid item md={TotalBills > 0 ? 6 : 12} sm={12}>
               <Stack
                 direction={{ xs: "row" }}
                 spacing={1}
