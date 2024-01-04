@@ -1,17 +1,20 @@
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import Spinner from "./views/Spinner/Spinner";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+const getBasename = () => {
+  return `/${process.env.PUBLIC_URL.split("/").pop()}`;
+};
 root.render(
   <React.StrictMode>
     <Suspense fallback={<Spinner />}>
-      <HashRouter>
+      <BrowserRouter basename={getBasename()}>
         <App />
-      </HashRouter>
+      </BrowserRouter>
     </Suspense>
   </React.StrictMode>
 );

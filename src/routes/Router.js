@@ -40,7 +40,6 @@ const MISSalesInvoice = lazy(() =>
   import("../components//Reports/MISSalesInvoice.js")
 );
 
-
 const MISStockReport = lazy(() =>
   import("../components//Reports/MISStockReport.js")
 );
@@ -51,8 +50,15 @@ const ThemeRoutes = [
     path: "/",
     element: <FullLayout />,
     children: [
-      // { path: "/", element: <Navigate to="dashboards/dashboard1" /> },
-      // { path: "dashboards/dashboard1", exact: true, element: <Dashboard1 /> },
+      {
+        path: "/",
+        element: <Navigate to="/transacation/ManagePurchaseInvoice" />,
+      },
+      {
+        path: "/transacation/ManagePurchaseInvoice",
+        exact: true,
+        element: <ManagePurchaseInvoice />,
+      },
       { path: "/", element: <Company /> },
       { path: "/masters/Bank", element: <Bank /> },
       { path: "/masters/Company", element: <Company /> },
@@ -84,7 +90,7 @@ const ThemeRoutes = [
       {
         path: "/mis_reports/MISSalesInvoice",
         element: <MISSalesInvoice />,
-      },      
+      },
       {
         path: "/mis_reports/MISStockReport",
         element: <MISStockReport />,

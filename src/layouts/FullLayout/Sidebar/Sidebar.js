@@ -19,7 +19,6 @@ import { SidebarWidth } from "../../../assets/global/Theme-variable";
 import LogoIcon from "../Logo/LogoIcon";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Transaction from "./Transaction";
-import AddRoadIcon from '@mui/icons-material/AddRoad';
 import Masters from "./Masters";
 import MISReports from "./MISReports";
 import "./Sidebar.css";
@@ -73,7 +72,7 @@ const Sidebar = (props) => {
             sx={{
               mt: 2,
               pb: 0,
-              mb:0
+              mb: 0,
             }}
           >
             <Divider color="#C3E2C2" />
