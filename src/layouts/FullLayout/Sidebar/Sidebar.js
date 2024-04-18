@@ -66,6 +66,7 @@ const Sidebar = (props) => {
           <LogoIcon />
         </Box>
       </Link>
+      
       <Box>
         <Box>
           <List

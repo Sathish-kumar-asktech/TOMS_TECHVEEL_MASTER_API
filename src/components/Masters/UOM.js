@@ -47,7 +47,7 @@ const StyledTableCell = styled(TableCell)({
   color: "#F5F7F8",
   fontWeight: "600",
   textAlign: "center",
-  backgroundColor: "#3081D0", 
+  backgroundColor: "#3081D0",
 });
 
 const UOM = () => {
@@ -621,7 +621,7 @@ const UOM = () => {
                   sx={{ boxShadow: 1 }}
                   fullWidth
                 >
-                  {operation === "Add" ? 'Save' : 'Update'}                  
+                  {operation === "Add" ? "Save" : "Update"}
                 </Button>
               </Stack>
             </form>
