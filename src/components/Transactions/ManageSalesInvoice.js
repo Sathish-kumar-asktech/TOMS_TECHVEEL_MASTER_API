@@ -235,15 +235,15 @@ const ManageSalesInvoice = () => {
               background: "linear-gradient(to right, #3498db, #2c3e50)",
             }}
           >
-            <Stack
+            {/* <Stack
               direction={"row"}
               justifyContent={"center"}
               alignItems={"center"}
               spacing={5}
             >
-              <LocalMallIcon sx={{ pr: 1 }} />
-              Manage Sales Invoice
-            </Stack>
+              <LocalMallIcon sx={{ pr: 1 }} /> */}
+            Manage Sales Invoice
+            {/* </Stack> */}
           </Typography>
 
           <Stack
@@ -325,7 +325,9 @@ const ManageSalesInvoice = () => {
                   <TableCell align="center">
                     {formatDate(data.PoRefDate)}
                   </TableCell>
-                  <TableCell align="center">₹ {numeral(data.netAmount).format("0,0")}</TableCell>
+                  <TableCell align="center">
+                    ₹ {numeral(data.netAmount).format("0,0")}
+                  </TableCell>
 
                   <TableCell
                     align="center"
